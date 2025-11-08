@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.java.pedroPathing.auto;
+package org.firstinspires.ftc.teamcode.java.CodeVault.auto.randomAuto;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -8,6 +8,8 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.java.CodeVault.auto.Constants;
 
 /**
  * Example Auto for Pedro Pathing that actually drives forward and follows multiple paths.

@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.java.pedroPathing.auto;
+package org.firstinspires.ftc.teamcode.java.CodeVault.auto;
 
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.changes;
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.follower;
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.java.pedroPathing.auto.Tuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.changes;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.follower;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.java.CodeVault.auto.Tuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;

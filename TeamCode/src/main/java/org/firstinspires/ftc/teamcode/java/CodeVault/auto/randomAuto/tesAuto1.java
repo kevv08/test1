@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.java.pedroPathing.auto; // make sure this aligns with class location
+package org.firstinspires.ftc.teamcode.java.CodeVault.auto.randomAuto; // make sure this aligns with class location
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -10,10 +10,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "finalAuto1", group = "Examples")
-public class finalAuto extends OpMode {
+import org.firstinspires.ftc.teamcode.java.CodeVault.auto.Constants;
+
+@Autonomous(name = "testAuto1", group = "Examples")
+public class tesAuto1 extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -22,7 +23,6 @@ public class finalAuto extends OpMode {
 
     private DcMotor intakeLeft, intakeRight;
     private DcMotor shooterLeft, shooterRight;
-    private Servo upchargeLeft,upchargeRight;
 
 
 
@@ -34,7 +34,7 @@ public class finalAuto extends OpMode {
     private final Pose prePickUpPose2 = new Pose(51.8, 57.9, Math.toRadians(180));
     private final Pose pickUpPose2 = new Pose(14.7, 57.9, Math.toRadians(180));
 
-    private PathChain goToPickup1, grabPickup1, scorePickup1, goToPickup2, grabPickup2, scorePickup2, goToPickup3, grabPickup3, scorePickup3;
+    private PathChain goToPickup1, grabPickup1, scorePickup1, goToPickup2, grabPickup2, scorePickup2;
 
     public void buildPaths() {
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
@@ -84,19 +84,13 @@ public class finalAuto extends OpMode {
                 break;
             case 1:
 
-            /* You could check for
-            - Follower State: "if(!follower.isBusy()) {}"
-            - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
-            - Robot Position: "if(follower.getPose().getX() > 36) {}"
-            */
-
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if (!follower.isBusy()) {
                     /* Score Preload */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup1, true);
-                    performPickupAction();
+                    follower.followPath(goToPickup1, true);
+                    performPickupActionDuringPath();
                     setPathState(2);
                 }
                 break;
@@ -106,7 +100,7 @@ public class finalAuto extends OpMode {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup1, true);
+                    follower.followPath(grabPickup1, true);
                     performScoreAction();
                     setPathState(3);
                 }
@@ -117,8 +111,8 @@ public class finalAuto extends OpMode {
                     /* Score Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup2, true);
-                    performPickupAction();
+                    follower.followPath(scorePickup1, true);
+                    performPickupActionDuringPath();
                     setPathState(4);
                 }
                 break;
@@ -128,7 +122,7 @@ public class finalAuto extends OpMode {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup2, true);
+                    follower.followPath(goToPickup2, true);
                     performScoreAction();
                     setPathState(5);
                 }
@@ -139,7 +133,7 @@ public class finalAuto extends OpMode {
                     /* Score Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup3, true);
+                    follower.followPath(grabPickup2, true);
                     setPathState(6);
                 }
                 break;
@@ -149,7 +143,7 @@ public class finalAuto extends OpMode {
                     /* Grab Sample */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(scorePickup3, true);
+                    follower.followPath(scorePickup2, true);
                     setPathState(7);
                 }
                 break;
@@ -187,8 +181,7 @@ public class finalAuto extends OpMode {
         intakeRight = hardwareMap.get(DcMotor.class, "ir");
         shooterRight = hardwareMap.get(DcMotor.class, "sr");
         shooterLeft = hardwareMap.get(DcMotor.class, "sl");
-        upchargeLeft = hardwareMap.get(Servo.class, "upLeft");
-        upchargeRight = hardwareMap.get(Servo.class, "upRight");
+
 
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -254,18 +247,16 @@ public class finalAuto extends OpMode {
 
     }
 
-    private void performPickupAction() {
-        // Intake briefly to ensure capture
-        intakeLeft.setPower(-1);
-        intakeRight.setPower(-1);
-
-        actionTimer.resetTimer();
-        while (actionTimer.getElapsedTimeSeconds() < 3.0) {
-            // Intake running
+    private void performPickupActionDuringPath() {
+        // Keep intake running while follower is busy
+        if (follower.isBusy()) {
+            intakeLeft.setPower(-1);
+            intakeRight.setPower(-1);
+        } else {
+            stopIntake();
         }
-
-        stopIntake();
     }
+
 
     private void runIntakeDuringPickup() {
         intakeLeft.setPower(-1);

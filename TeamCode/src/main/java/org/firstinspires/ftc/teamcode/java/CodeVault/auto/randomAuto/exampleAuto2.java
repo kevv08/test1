@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.java.pedroPathing.auto;
+package org.firstinspires.ftc.teamcode.java.CodeVault.auto.randomAuto;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,6 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.java.CodeVault.auto.Constants;
 
 @Autonomous
 public class exampleAuto2 extends OpMode {
@@ -34,7 +35,7 @@ public class exampleAuto2 extends OpMode {
 
     // Paths
 
-    private PathChain scorePreLoad,grabPickup1, scorePickup1, grabPickup2, scorePickup2;
+    private PathChain scorePreLoad,goToGrabPickup1,grabPickup1, scorePickup1,goToGrabPickup2, grabPickup2, scorePickup2;
 
     @Override
     public void init() {
@@ -102,24 +103,34 @@ public class exampleAuto2 extends OpMode {
                 .build(); // ✅ returns a Path
 
 
-        grabPickup1 = follower
+        goToGrabPickup1 = follower
                 .pathBuilder()
                 .addPath(new BezierLine(scorePose, prePickUpPose1))
                 .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
                 .build();
 
-        scorePickup1 = follower
+       grabPickup1 = follower
                 .pathBuilder()
-                .addPath(new BezierLine(pickUpPose1, scorePose))
+                .addPath(new BezierLine(prePickUpPose1, pickUpPose1))
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
                 .build();
 
-        grabPickup2 = follower
+        scorePickup1 = follower
                 .pathBuilder()
-                .addPath(new BezierLine(scorePose, prePickUpPose2))
+                .addPath(new BezierLine(pickUpPose1, scorePose))
                 .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
                 .build();
 
+        goToGrabPickup2 = follower
+                .pathBuilder()
+                .addPath(new BezierLine(scorePose, prePickUpPose2))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
+                .build();
+        grabPickup2 = follower
+                .pathBuilder()
+                .addPath(new BezierLine(prePickUpPose2, pickUpPose2))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
+                .build();
         scorePickup2 = follower
                 .pathBuilder()
                 .addPath(new BezierLine(pickUpPose2, scorePose))
@@ -138,7 +149,7 @@ public class exampleAuto2 extends OpMode {
             case 1:
                 if (!follower.isBusy()) {
                     performScoreAction();
-                    follower.followPath(grabPickup1, true);
+                    follower.followPath(goToGrabPickup1, true);
                     setPathState(2);
                 }
                 break;
@@ -149,7 +160,7 @@ public class exampleAuto2 extends OpMode {
                 } else if (!follower.isBusy()) {
                     stopIntake();
                     performPickupAction();
-                    follower.followPath(scorePickup1, true);
+                    follower.followPath(grabPickup1, true);
                     setPathState(3);
                 }
                 break;
@@ -157,7 +168,7 @@ public class exampleAuto2 extends OpMode {
             case 3:
                 if (!follower.isBusy()) {
                     performScoreAction();
-                    follower.followPath(grabPickup2, true);
+                    follower.followPath(scorePickup1, true);
                     setPathState(4);
                 }
                 break;
@@ -168,7 +179,7 @@ public class exampleAuto2 extends OpMode {
                 } else if (!follower.isBusy()) {
                     stopIntake();
                     performPickupAction();
-                    follower.followPath(scorePickup2, true);
+                    follower.followPath(goToGrabPickup2, true);
                     setPathState(5);
                 }
                 break;

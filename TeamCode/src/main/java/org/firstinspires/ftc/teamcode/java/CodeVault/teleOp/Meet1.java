@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.java.pedroPathing.teleOp;
+package org.firstinspires.ftc.teamcode.java.CodeVault.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.java.pedroPathing.helper.fieldCentric;
-import org.firstinspires.ftc.teamcode.java.pedroPathing.helper.imuCall;
+import org.firstinspires.ftc.teamcode.java.CodeVault.helper.fieldCentric;
+import org.firstinspires.ftc.teamcode.java.CodeVault.helper.imuCall;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "Meet1")
+@TeleOp(name = "blueMeet1Bot", group = "Competition")
 public class Meet1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

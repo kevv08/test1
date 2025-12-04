@@ -3,32 +3,31 @@ package org.firstinspires.ftc.teamcode.java.CodeVault.teleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.java.CodeVault.helper.fieldCentric;
 import org.firstinspires.ftc.teamcode.java.CodeVault.helper.imuCall;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name = "blueMeet1Bot", group = "Competition")
 public class Meet1 extends LinearOpMode {
+
     @Override
     public void runOpMode() throws InterruptedException {
 
         // --- Initialize drivetrain class
         fieldCentric drive = new fieldCentric(hardwareMap, "fl", "fr", "bl", "br");
 
+        // --- Initialize Shooter class
+        Shooter shooter = new Shooter(hardwareMap, "sr", "sl");
+
         // --- Other motors and servos
         DcMotor intakeLeft  = hardwareMap.get(DcMotor.class, "il");
         DcMotor intakeRight = hardwareMap.get(DcMotor.class, "ir");
 
-        DcMotor shooterRight = hardwareMap.get(DcMotor.class, "sr");
-        DcMotor shooterLeft  = hardwareMap.get(DcMotor.class, "sl");
-
         Servo upchargeLeft  = hardwareMap.get(Servo.class, "upLeft");
         Servo upchargeRight = hardwareMap.get(Servo.class, "upRight");
-
-        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // --- Initialize IMU
         IMU imu = imuCall.initIMU(hardwareMap, "imu");
@@ -48,10 +47,10 @@ public class Meet1 extends LinearOpMode {
             double rawHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             double botHeading = rawHeading - headingOffset;
 
-            // Gamepad input (note the clean inversion for strafe)
-            double y  = gamepad1.left_stick_y;  // forward is negative on stick
-            double x  =  -gamepad1.left_stick_x;  // strafe
-            double rx =  -gamepad1.right_stick_x; // rotation (negated for natural turning)
+            // Gamepad input
+            double y  =  gamepad1.left_stick_y;
+            double x  = -gamepad1.left_stick_x;
+            double rx = -gamepad1.right_stick_x;
 
             drive.drive(x, y, rx, botHeading);
 
@@ -67,30 +66,26 @@ public class Meet1 extends LinearOpMode {
                 intakeRight.setPower(0);
             }
 
-            // --- Shooter controls
-            double shooter = gamepad1.right_trigger;
-            shooter -= 0.35;
-            if (shooter > 0.1) {
-                shooterRight.setPower(shooter);
-                shooterLeft.setPower(shooter);
-            } else {
-                shooterRight.setPower(0);
-                shooterLeft.setPower(0);
-            }
+            // --- Shooter controls (handled by Shooter class)
+            shooter.update(gamepad1.right_trigger);
+            boolean shooterReady = shooter.isReady();   // <--- use this
 
-            // --- Upcharge + reverse intake
-            if (gamepad1.right_bumper) {
-                upchargeLeft.setPosition(0.25); // up
-                upchargeRight.setPosition(0.0); // up
+            // --- Upcharge + reverse intake (only feed when ready)
+            if (gamepad1.right_bumper && shooterReady) {
+                upchargeLeft.setPosition(0.25);
+                upchargeRight.setPosition(0.0);
                 intakeLeft.setPower(-0.5);
                 intakeRight.setPower(-0.5);
             } else {
-                upchargeLeft.setPosition(0.0);  // down
-                upchargeRight.setPosition(0.25); // down
+                upchargeLeft.setPosition(0.0);
+                upchargeRight.setPosition(0.25);
             }
 
+            // --- Telemetry
             telemetry.addData("Heading (°)", Math.toDegrees(botHeading));
             telemetry.addData("Offset (°)", Math.toDegrees(headingOffset));
+            shooter.addTelemetry(telemetry);  // shooter-specific info
+
             telemetry.update();
         }
     }

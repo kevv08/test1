@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.java.CodeVault.auto.finalAuto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "Red Alliance Auto", group = "Examples")
-class RedAllianceAuto extends BlueAllianceAuto {
+public class RedAllianceAuto extends BlueAllianceAuto {
 
     @Override
     public void init() {
